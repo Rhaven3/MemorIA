@@ -1,0 +1,6 @@
+{
+  "name": "Memoria",
+  "description": "Un compagnon numérique et assistant vocal chaleureux conçu spécifiquement pour le bien-être cognitif des seniors.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

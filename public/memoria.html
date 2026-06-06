@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>Memoria - Mon Compagnon Vocal</title>
+    
+    <!-- Polices de caractères améliorant le confort de lecture pour les seniors (Atkinson + Plus Jakarta) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&family=Atkinson+Hyperlegible+Next:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Script d'inclusion Tailwind pour l'esthétique générale de l'interface -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Injection de notre configuration de thème épurée et inclusive -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#fbf9f5", // Crème papier très reposant
+              "primary": "#35607f",    // Bleu doux, excellent contraste
+              "secondary": "#6a5d43",  // Or/Brun chaud pour les labels secondaires
+              "tertiary": "#546049",   // Vert sauge pour le bien-être visuel
+              "on-surface": "#1b1c1a", // Anthracite doux plutôt que noir pur
+              "on-surface-variant": "#42474d",
+              "surface-container": "#efeeea",
+              "surface-container-low": "#f5f3ef",
+              "surface-container-lowest": "#ffffff",
+              "terracotta": "#c0563f", // Couleur brique tactile pour nos boutons d'action d'écoute
+              "terracotta-dark": "#9e3f2b",
+              "error": "#ba1a1a",
+              "error-container": "#ffdad6"
+            },
+            borderRadius: {
+              "DEFAULT": "1rem",
+              "lg": "2rem",
+              "xl": "3rem"
+            },
+            fontFamily: {
+              headline: ["Plus Jakarta Sans", "sans-serif"],
+              body: ["Atkinson Hyperlegible Next", "sans-serif"]
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Styles CSS personnalisés pour effets visuels "Touchés Réalistes" et ondes vocales -->
+    <style>
+        body {
+            background-color: #fbf9f5;
+            color: #1b1c1a;
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Atkinson Hyperlegible Next', sans-serif;
+            user-select: none;
+        }
+
+        /* Effet d'appui réaliste sur les boutons tactiles pour seniors */
+        .tactile-btn {
+            border-bottom: 5px solid rgba(0, 0, 0, 0.25);
+            transition: all 0.08s ease;
+        }
+        .tactile-btn:active {
+            transform: translateY(4px);
+            border-bottom-width: 1px;
+        }
+
+        /* Cercles d'ondes d'écoute pulsés en arrière-plan */
+        .pulse-ring {
+            animation: pulse-ring 2.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.92); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0.3; }
+            100% { transform: scale(0.92); opacity: 0.8; }
+        }
+
+        /* Animation des barres de l'indicateur d'écoute sauge */
+        .wave-bar {
+            width: 8px;
+            background-color: #546049;
+            border-radius: 4px;
+            height: 12px;
+            transition: height 0.15s ease-in-out, background-color 0.3s ease;
+        }
+        
+        .wave-active .wave-bar {
+            animation: wave-bounce 1.2s ease-in-out infinite;
+        }
+
+        @keyframes wave-bounce {
+            0%, 100% { height: 12px; transform: scaleY(1); }
+            50% { height: 48px; transform: scaleY(1.3); }
+        }
+
+        /* Ombre douce enveloppante */
+        .vintage-shadow {
+            box-shadow: 0 16px 36px -10px rgba(53, 96, 127, 0.08);
+        }
+        .high-lift {
+            box-shadow: 0 24px 48px -12px rgba(106, 93, 67, 0.14);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden p-0 m-0">
+
+    <!-- === HEADER IDENTITÉ MEMORIA === -->
+    <header class="w-full flex flex-col items-center pt-8 pb-4 px-6 max-w-lg mx-auto bg-background z-10">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">waves</span>
+            <h1 class="font-headline text-3xl font-bold text-primary tracking-tight">Memoria</h1>
+        </div>
+        <!-- Indicateur d'Écoute Générale (Ondes Sauge) -->
+        <div id="listening-wave" class="flex items-center justify-center gap-2 h-14 w-full mt-3">
+            <div class="wave-bar" style="animation-delay: 0.1s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.3s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.5s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.2s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.4s;"></div>
+            <div class="wave-bar" style="animation-delay: 0.6s;"></div>
+        </div>
+    </header>
+
+    <!-- === CONTENEUR PRINCIPAL DE NAVIGATION (ÉCRANS RECRÉÉS) === -->
+    <main class="flex-grow flex flex-col items-center justify-center w-full max-w-lg mx-auto px-6 pb-28">
+
+        <!-- ============================================== -->
+        <!-- ÉCRAN 1 : VERRU / ACCUEIL ONBOARDING (Mardi 24 Octobre) -->
+        <!-- ============================================== -->
+        <div id="screen-lock" class="w-full flex flex-col items-center justify-between py-4 space-y-10">
+            <div class="text-center space-y-2 mt-4">
+                <h2 id="live-clock" class="font-headline text-7xl font-extrabold text-primary tracking-tighter">09:00</h2>
+                <p id="live-date" class="font-headline text-secondary text-lg font-bold uppercase tracking-wider">Mardi 24 Octobre</p>
+            </div>
+
+            <!-- Cadre Photo de Famille Chaleureux (Polaroid) -->
+            <div class="w-full bg-white p-4 rounded-xl vintage-shadow border-4 border-white transform rotate-1 hover:rotate-0 transition-transform duration-300 flex flex-col items-center space-y-3">
+                <div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-surface-container-low border border-primary/5">
+                    <img src="family_photo.jpg" alt="Mes amours et ma tendre famille" class="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div class="text-center">
+                    <p class="font-headline text-[#6a5d43] text-xl font-bold tracking-tight">Mes amours ❤️</p>
+                </div>
+            </div>
+
+            <!-- Carte de Notification Tactile -->
+            <div class="w-full bg-surface-container-lowest border-2 border-primary/10 rounded-lg p-6 vintage-shadow space-y-4">
+                <div class="flex items-center gap-3 border-b border-surface-container pb-3">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined text-2xl">waves</span>
+                    </div>
+                    <span class="font-headline text-primary font-bold text-lg">Suggestion du matin</span>
+                    <span class="text-sm text-secondary font-bold ml-auto">Maintenant</span>
+                </div>
+                <h3 class="font-headline text-2xl text-on-surface leading-tight font-bold">
+                    Bonjour Suzanne. Memoria est là pour toi 💛
+                </h3>
+                <p class="font-body text-lg text-on-surface-variant leading-relaxed">
+                    Appuyez pour commencer votre journée avec vos merveilleux souvenirs et vos activités prévues.
+                </p>
+                <button onclick="unlockAndGoToCompanion()" class="w-full py-4 bg-primary text-white font-headline text-xl rounded-full tracking-wide flex items-center justify-center gap-3 cursor-pointer tactile-btn">
+                    <span>Ouvrir Memoria</span>
+                    <span class="material-symbols-outlined text-2xl">arrow_forward</span>
+                </button>
+            </div>
+            
+            <p class="font-body text-secondary font-bold text-lg animate-pulse flex items-center gap-2">
+                <span class="material-symbols-outlined">expand_less</span>
+                Glissez ou cliquez ci-dessus pour ouvrir
+            </p>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- ÉCRAN 2 : DIALOGUE COMPAGNON VOCAL (Illustration + Listes) -->
+        <!-- ============================================== -->
+        <div id="screen-companion" class="w-full flex flex-col items-center space-y-8 hidden">
+            
+            <!-- Carte interactive avec Portrait / Illustration Cognitif -->
+            <section class="text-center w-full">
+                <h2 id="companion-question" class="font-headline text-2xl font-bold text-on-surface mb-6 leading-snug px-3">
+                    Qu'avez-vous pris pour le petit-déjeuner ce matin ?
+                </h2>
+                
+                <!-- Cadre Visuel Rétro Aquarelle ou Photo Famille -->
+                <div id="companion-media-card" class="relative w-64 h-64 mx-auto rounded-lg overflow-hidden border-8 border-white vintage-shadow transform transition-transform duration-500 hover:scale-105">
+                    <img id="companion-img" alt="Petit-déjeuner ou souvenirs" class="w-full h-full object-cover rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRw29_6QgyJ8GEsPiLKA19tMUlYRI7t2FcCkFsfnZqgUb0vX4wuUrfG5nq2KoxD7qronkTlOiSLFMK8LEdSwy6AyZz0-Mb-f5IMHpWayWoD79UGDSm_hkdljI842ykRz3ocDYnqojabRfookbgPA1Y2ZMQZjPNuXKi2zaRUMFlvm-OgNQbjJd5028Uzkx8TAu00Mkj9XXDxQEagr_nGK9sOdr19CvZ8RKMbDk901Rd2xsTcGGOh5MHqI1EOUeVAotUjVpvz69qooVD"/>
+                </div>
+            </section>
+
+            <!-- Transcription Audio en Temps Réel -->
+            <div id="mic-transcript-container" class="w-full bg-surface-container-low rounded-lg p-4 border border-primary/5 hidden">
+                <p class="font-body text-sm text-secondary font-bold uppercase tracking-wider mb-1">Votre réponse entendue :</p>
+                <p id="mic-transcript-text" class="font-body text-lg italic text-primary leading-relaxed">...</p>
+            </div>
+
+            <!-- Réponse Vocale de l'Assistant et Suggestions IA -->
+            <div id="ai-response-container" class="w-full space-y-4 hidden">
+                <div class="bg-surface-container-lowest p-6 rounded-lg vintage-shadow border border-primary/10">
+                    <span class="font-headline text-tertiary font-bold flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined">forum</span> Memoria :
+                    </span>
+                    <p id="ai-response-text" class="font-body text-xl text-on-surface leading-relaxed text-left">
+                        Merveilleux ! Commencer la journée avec de bonnes choses est si important.
+                    </p>
+                    <button id="btn-re-read" onclick="readLastAIResponse()" class="mt-3 flex items-center gap-2 text-primary font-headline text-base font-bold bg-primary/5 px-4 py-2 rounded-full border border-primary/10 hover:bg-primary/10">
+                        <span class="material-symbols-outlined text-lg">volume_up</span> Réécouter à voix haute
+                    </button>
+                </div>
+
+                <!-- Suggestions Dynamiques d'Activités -->
+                <div id="ai-suggestions-list" class="space-y-4">
+                    <!-- Généré dynamiquement en JS depuis le backend -->
+                </div>
+            </div>
+
+            <!-- Ligne de Temps (Routine du Matin Discrète) -->
+            <div id="routine-timeline" class="w-full bg-surface-container-low rounded-lg p-5 border border-primary/5 space-y-4">
+                <h4 class="font-headline text-secondary text-sm font-bold uppercase tracking-wider">Votre planning d'aujourd'hui :</h4>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-4 text-left">
+                        <span class="font-headline text-secondary text-base font-bold min-w-[55px]">10:00</span>
+                        <div class="h-6 w-0.5 bg-secondary/30"></div>
+                        <span class="font-body text-on-surface text-lg">Prendre le comprimé de tension</span>
+                    </div>
+                    <div class="h-px bg-on-surface/5"></div>
+                    <div class="flex items-center gap-4 text-left">
+                        <span class="font-headline text-secondary text-base font-bold min-w-[55px]">11:00</span>
+                        <div class="h-6 w-0.5 bg-secondary/30"></div>
+                        <span class="font-body text-on-surface text-lg">Passage de l'infirmière</span>
+                    </div>
+                    <div class="h-px bg-on-surface/5"></div>
+                    <div class="flex items-center gap-4 text-left">
+                        <span class="font-headline text-secondary text-base font-bold min-w-[55px]">12:00</span>
+                        <div class="h-6 w-0.5 bg-secondary/30"></div>
+                        <span class="font-body text-on-surface text-lg">Portage du repas à domicile</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Switch Rapide de Questions pour la Démo -->
+            <div class="flex items-center justify-center gap-4 pt-4">
+                <button onclick="loadQuestion('petit-dejeuner')" class="px-4 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary font-headline text-sm rounded-full tracking-wide">
+                    🍳 Petit-déjeuner
+                </button>
+                <button onclick="loadQuestion('mari')" class="px-4 py-2 bg-secondary/10 hover:bg-secondary/20 text-secondary font-headline text-sm rounded-full tracking-wide">
+                    💍 Rencontre mari
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- ÉCRAN 3 : SOUVENIRS DES PROCHES (Message de Lucas) -->
+        <!-- ============================================== -->
+        <div id="screen-family" class="w-full flex flex-col items-center space-y-8 hidden">
+            <header class="text-center">
+                <h2 class="font-headline text-2xl font-bold text-on-surface mb-2">Un message de vos proches</h2>
+                <p class="font-body text-lg text-secondary">Lucas a pensé à vous ce matin, il vous a envoyé un petit mot.</p>
+            </header>
+
+            <!-- Portrait Chaleureux de Lucas -->
+            <div class="relative group">
+                <div class="w-48 h-48 rounded-full overflow-hidden border-8 border-white vintage-shadow transform transition-all duration-300 group-hover:scale-105">
+                    <img alt="Lucas Sourire" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXgqw42norUOTiVcyWhtWldKIkitzWKSF43PmOb8xmhVSAzbBOFX79lC7fCSBW3Hf701iNi3OAoJqrylRu_12c4Q4VTORA6ngaG3xWp0LSZ0QIXUojDsmVjbf1bktITrCJb5XNxVIxN4hshGFk4IztrrGedoyfCZI0wdIDAe1jDARtM3ci09CSo9rHRJulkqVZIRI2HfACWFcPZRR9KKx9M60258uHGzQk5vg8tnOUlKjADxegm6zsnc3ij8WbPzCf-m1Jqo44XLJQ"/>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-red-500 text-white p-3 rounded-full shadow-lg">
+                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                </div>
+            </div>
+
+            <div class="w-full bg-surface-container pb-4 pt-6 px-6 rounded-lg vintage-shadow border border-primary/5 flex flex-col items-center">
+                <button onclick="playLucasVoice()" class="mb-4 bg-primary text-white p-4 rounded-full flex items-center justify-center gap-2 cursor-pointer tactile-btn">
+                    <span id="lucas-speaker-icon" class="material-symbols-outlined text-3xl">volume_up</span>
+                    <span class="font-headline text-lg px-2">Écouter son mot vocal</span>
+                </button>
+
+                <!-- Zone de Citation Chaleureuse -->
+                <blockquote class="w-full border-l-4 border-primary pl-4 py-2 text-left italic">
+                    <p class="font-body text-xl text-on-surface leading-relaxed">
+                        « Coucou Mamie, j'espère que tu vas bien... Je pensais à toi en voyant ces jolies fleurs au parc ce matin. On se voit dimanche ! »
+                    </p>
+                </blockquote>
+            </div>
+
+            <!-- Action positive "Garder ce souvenir" -->
+            <button id="btn-save- souvenir" onclick="saveSouvenir()" class="py-4 px-8 bg-surface-container-lowest text-secondary font-headline text-lg rounded-full flex items-center gap-3 border border-secondary/20 shadow-sm hover:text-primary hover:border-primary/50 cursor-pointer transition-colors tactile-btn">
+                <span id="souvenir-heart-icon" class="text-2xl">💛</span>
+                <span id="souvenir-text">Garder ce message précieux</span>
+            </button>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- ÉCRAN 4 : HISTORIQUE ET ÉVÉNEMENTS (Toutes les Activités) -->
+        <!-- ============================================== -->
+        <div id="screen-events" class="w-full flex flex-col items-center space-y-6 hidden">
+            <header class="text-center w-full">
+                <h2 class="font-headline text-2xl font-bold text-on-surface">Activités Adaptées</h2>
+                <p class="font-body text-lg text-secondary">Faites des rencontres et restez actifs à Limoges</p>
+            </header>
+
+            <!-- Liste complète des activités du backend -->
+            <div class="w-full space-y-4">
+                <div class="flex items-center justify-between border-b border-surface-container pb-2 mb-2">
+                    <h3 class="font-headline text-lg font-bold text-primary">Toutes les activités disponibles :</h3>
+                    <button onclick="fetchEvents()" class="text-sm font-headline text-primary bg-primary/5 px-3 py-1 rounded-full border border-primary/10">
+                        Actualiser
+                    </button>
+                </div>
+                
+                <div id="events-list-container" class="space-y-4">
+                    <!-- Généré par JS via GET /events -->
+                </div>
+            </div>
+
+            <!-- Historique des participations -->
+            <div class="w-full pt-4 space-y-4 border-t border-surface-container">
+                <h3 class="font-headline text-lg font-bold text-tertiary">Vos participations enregistrées :</h3>
+                <div id="participations-list-container" class="space-y-3">
+                    <!-- Liste des participations retournées par GET /participations/:userId -->
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- ÉCRAN 5 : PARAMÈTRES / PROFIL DE SUZANNE (Toutes les options) -->
+        <!-- ============================================== -->
+        <div id="screen-settings" class="w-full flex flex-col items-center space-y-6 hidden">
+            <header class="text-center">
+                <h2 class="font-headline text-2xl font-bold text-on-surface">Fiche Personnelle de Suzanne</h2>
+                <p class="font-body text-lg text-secondary">Paramètres cognitifs et options de démo</p>
+            </header>
+
+            <!-- Formulaire de Profil du Senior -->
+            <form id="profile-form" onsubmit="saveProfile(event)" class="w-full bg-surface-container-lowest p-6 rounded-lg vintage-shadow border border-primary/5 text-left space-y-5">
+                <div class="space-y-2">
+                    <label class="block font-headline text-primary font-bold text-md" for="profile-name">Prénom de la personne accompagnée :</label>
+                    <input type="text" id="profile-name" class="w-full h-12 px-4 rounded border border-secondary/30 font-body text-lg bg-surface-container-low focus:border-primary focus:ring-primary" required value="Suzanne"/>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block font-headline text-primary font-bold text-md" for="profile-age">Âge :</label>
+                        <input type="number" id="profile-age" class="w-full h-12 px-4 rounded border border-secondary/30 font-body text-lg bg-surface-container-low focus:border-primary focus:ring-primary" required value="82"/>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-headline text-primary font-bold text-md" for="profile-mobility">Niveau de mobilité :</label>
+                        <select id="profile-mobility" class="w-full h-12 px-3 rounded border border-secondary/30 font-body text-lg bg-surface-container-low focus:border-primary" required>
+                            <option value="Modérée">Modérée (Canne / Chaise)</option>
+                            <option value="Réduite">Réduite (Chambre)</option>
+                            <option value="Excellente">Excellente (Promenades)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block font-headline text-primary font-bold text-md" for="profile-interests">Sujets d'intérêts (séparés par virgules) :</label>
+                    <input type="text" id="profile-interests" class="w-full h-12 px-4 rounded border border-secondary/30 font-body text-lg bg-surface-container-low focus:border-primary" value="Art, Poésie, Botanique, Histoire locale"/>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block font-headline text-primary font-bold text-md" for="profile-avoid">Sujets sensibles à éviter absolument :</label>
+                    <input type="text" id="profile-avoid" class="w-full h-12 px-4 rounded border-red-300 font-body text-lg bg-red-50/20 focus:border-red-500" value="Guerre, Maladie, Solitude"/>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-tertiary text-white font-headline text-xl rounded-full cursor-pointer tactile-btn">
+                    Enregistrer les modifications
+                </button>
+            </form>
+
+            <!-- Configuration de la Voix & Confort Sonore -->
+            <div class="w-full bg-surface-container-lowest p-6 rounded-lg vintage-shadow border border-primary/5 text-left space-y-6">
+                <div>
+                    <span class="font-headline text-primary font-bold text-lg block border-b border-surface-container pb-2 mb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-2xl">volume_up</span> 
+                        Voix & Personnalisation (Moins Robotique)
+                    </span>
+                    <p class="font-body text-base text-secondary leading-relaxed mb-4">
+                        Choisissez des voix plus douces et réglez la hauteur de ton (pitch) et la vitesse pour que les dialogues soient le plus réconfortant possible pour Suzanne.
+                    </p>
+                </div>
+
+                <!-- Section Assistant Vocal -->
+                <div class="space-y-4 p-4 bg-surface-container-low rounded border border-primary/5">
+                    <h4 class="font-headline text-primary font-bold text-md">🎨 Voix de l'Assistant (Memoria)</h4>
+                    
+                    <div class="space-y-1">
+                        <label class="block font-headline text-secondary text-sm font-bold" for="voice-assistant-select">Sélectionner la voix de l'appareil :</label>
+                        <select id="voice-assistant-select" onchange="saveVoiceConfig()" class="w-full h-11 px-2 rounded border border-secondary/30 font-body text-md bg-white focus:border-primary">
+                            <!-- Rempli par JS -->
+                        </select>
+                        <p class="text-xs text-secondary italic">Si disponibles, privilégiez les voix "Google français", "Premium" ou "Natural".</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block font-headline text-secondary text-sm font-bold" for="voice-assistant-pitch">Douceur / Hauteur (Ton) :</label>
+                            <input type="range" id="voice-assistant-pitch" min="0.5" max="2" step="0.1" value="1.1" onchange="saveVoiceConfig()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-secondary px-1"><span>Aigu / Doux</span><span>Neutre</span><span>Grave</span></div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block font-headline text-secondary text-sm font-bold" for="voice-assistant-rate">Vitesse d'élocution :</label>
+                            <input type="range" id="voice-assistant-rate" min="0.5" max="1.5" step="0.05" value="0.8" onchange="saveVoiceConfig()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-secondary px-1"><span>Lente (Seniors)</span><span>Normale</span><span>Rapide</span></div>
+                        </div>
+                    </div>
+
+                    <button onclick="testVoice('assistant')" class="mt-2 w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary font-headline text-sm font-bold rounded flex items-center justify-center gap-2 border border-primary/20 tactile-btn">
+                        <span class="material-symbols-outlined text-lg">play_circle</span>
+                        Tester et Écouter l'Assistant
+                    </button>
+                </div>
+
+                <!-- Section Lucas -->
+                <div class="space-y-4 p-4 bg-surface-container-low rounded border border-primary/5">
+                    <h4 class="font-headline text-primary font-bold text-md">👦 Voix du Petit-fils (Lucas)</h4>
+                    
+                    <div class="space-y-1">
+                        <label class="block font-headline text-secondary text-sm font-bold" for="voice-lucas-select">Sélectionner la voix de l'appareil :</label>
+                        <select id="voice-lucas-select" onchange="saveVoiceConfig()" class="w-full h-11 px-2 rounded border border-secondary/30 font-body text-md bg-white focus:border-primary">
+                            <!-- Rempli par JS -->
+                        </select>
+                        <p class="text-xs text-secondary italic">Vous pouvez choisir une voix différente (ex. masculine "Thomas") si disponible.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="block font-headline text-secondary text-sm font-bold" for="voice-lucas-pitch">Douceur / Hauteur (Lucas) :</label>
+                            <input type="range" id="voice-lucas-pitch" min="0.5" max="2" step="0.1" value="1.15" onchange="saveVoiceConfig()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-secondary px-1"><span>Enfantin / Vif</span><span>Moyen</span><span>Grave</span></div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block font-headline text-secondary text-sm font-bold" for="voice-lucas-rate">Vitesse d'élocution (Lucas) :</label>
+                            <input type="range" id="voice-lucas-rate" min="0.5" max="1.5" step="0.05" value="0.85" onchange="saveVoiceConfig()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-secondary px-1"><span>Douce / Posée</span><span>Normale</span><span>Rapide</span></div>
+                        </div>
+                    </div>
+
+                    <button onclick="testVoice('lucas')" class="mt-2 w-full py-2 bg-tertiary/10 hover:bg-tertiary/20 text-tertiary font-headline text-sm font-bold rounded flex items-center justify-center gap-2 border border-tertiary/20 tactile-btn">
+                        <span class="material-symbols-outlined text-lg">play_circle</span>
+                        Tester et Écouter Lucas
+                    </button>
+                </div>
+            </div>
+
+            <!-- Configuration Technique / Accréditation de la démo -->
+            <div class="w-full bg-surface-container-low p-6 rounded-lg border border-secondary/25 space-y-4 text-left">
+                <span class="font-headline text-secondary font-bold text-md block border-b border-secondary/15 pb-2">🛠️ Informations d'identification Backend</span>
+                <p class="font-body text-sm text-on-surface-variant">
+                    Les spécifications imposent l'envoi d'entêtes d'autorisation <code class="bg-white/80 p-1 rounded font-mono font-bold">user123</code> pour Suzanne et <code class="bg-white/80 p-1 rounded font-mono font-bold">admin456</code> pour le mode admin.
+                </p>
+                <div class="space-y-2">
+                    <label class="block font-headline text-sm font-bold text-secondary" for="auth-select">Choisir l'en-tête d'autorisation à utiliser pour les API :</label>
+                    <select id="auth-select" onchange="updateAuthHeader()" class="w-full h-10 px-2 rounded border border-secondary/30 font-body text-md bg-white">
+                        <option value="user123">user123 (Authorization - Suzanne)</option>
+                        <option value="admin456">admin456 (Authorization - Admin)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- === INTERACTION GÉANTE & BARRE DE NAVIGATION (FIXÉE AU BAS) === -->
+    <nav class="fixed bottom-0 left-0 w-full z-40 bg-gradient-to-t from-background via-background/95 to-transparent pt-6 pb-8 pointer-events-none flex flex-col items-center">
+        
+        <!-- MICROPHONE GÉANT TACTILE TERRACOTTA -->
+        <div id="mic-container" class="relative pointer-events-auto mb-6 hidden">
+            <!-- Halo pulsant signalant l'activité vocale -->
+            <div id="mic-halo" class="absolute inset-x-0 mx-auto w-[150px] h-[150px] bg-terracotta rounded-full pulse-ring scale-110 hidden"></div>
+            
+            <button id="btn-mic" onclick="toggleMicrophone()" aria-label="Microphone d'assistance" class="relative z-10 mx-auto flex flex-col items-center justify-center bg-terracotta text-white rounded-full w-[140px] h-[140px] vintage-shadow hover:scale-105 active:scale-95 transition-transform cursor-pointer tactile-btn">
+                <span id="mic-icon" class="material-symbols-outlined text-[54px] mb-1" style="font-variation-settings: 'FILL' 1;">mic</span>
+                <span id="mic-status-label" class="font-headline text-lg text-white font-bold tracking-tight">Parler</span>
+            </button>
+        </div>
+
+        <!-- ZONE DE SÉLECTION D'ÉCRANS (ACCESSIBILITÉ) -->
+        <div class="flex items-center justify-center gap-8 bg-surface-container/90 backdrop-blur-md py-4 px-8 rounded-full border border-secondary/15 vintage-shadow pointer-events-auto max-w-sm">
+            <!-- Accueil -->
+            <button onclick="showScreen('screen-lock')" id="nav-lock" aria-label="Accueil" class="flex flex-col items-center justify-center text-primary w-14 h-14 hover:scale-110 active:scale-95 transition-transform gap-1">
+                <span class="material-symbols-outlined text-3xl">lock</span>
+                <span class="text-xs font-bold leading-none">Verrou</span>
+            </button>
+            <!-- Vocal -->
+            <button onclick="showScreen('screen-companion')" id="nav-companion" aria-label="Assistant Vocal" class="flex flex-col items-center justify-center text-secondary w-14 h-14 hover:scale-110 active:scale-95 transition-transform gap-1">
+                <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">mic_double</span>
+                <span class="text-xs font-bold leading-none">Companion</span>
+            </button>
+            <!-- Lucas -->
+            <button onclick="showScreen('screen-family')" id="nav-family" aria-label="Messages Proches" class="flex flex-col items-center justify-center text-secondary w-14 h-14 hover:scale-110 active:scale-95 transition-transform gap-1">
+                <span class="material-symbols-outlined text-3xl">favorite</span>
+                <span class="text-xs font-bold leading-none">Lucas</span>
+            </button>
+            <!-- Événements -->
+            <button onclick="showScreen('screen-events')" id="nav-events" aria-label="Événements" class="flex flex-col items-center justify-center text-secondary w-14 h-14 hover:scale-110 active:scale-95 transition-transform gap-1">
+                <span class="material-symbols-outlined text-3xl">calendar_month</span>
+                <span class="text-xs font-bold leading-none">Activités</span>
+            </button>
+            <!-- Profil -->
+            <button onclick="showScreen('screen-settings')" id="nav-settings" aria-label="Fiche Profil" class="flex flex-col items-center justify-center text-secondary w-14 h-14 hover:scale-110 active:scale-95 transition-transform gap-1">
+                <span class="material-symbols-outlined text-3xl">settings</span>
+                <span class="text-xs font-bold leading-none">Profil</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- === DÉBORDEMENT SOS URGENCE RAPIDE SUPPRIMÉ === -->
+
+    <!-- === SYSTEM COGNITIVE SCRIPTS === -->
+    <script>
+        // Configuration de base globale
+        const API_BASE = "http://localhost:3000";
+        let activeUserId = "user123"; // Par défaut,Suzanne. Modifié via l'écran des paramètres
+        let activeProfile = { prenom: "Suzanne", age: 82, mobilite: "Modérée" };
+        let currentQuestionKey = "petit-dejeuner";
+        let lastAIResponseTextStr = "";
+
+        // Instanciation de l'API de reconnaissance vocale Web Speech API
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let speechRecognizer = null;
+        let isMicrophoneListening = false;
+
+        // Configuration initiale du moteur de synthèse vocale (SpeechSynthesis)
+        const textReaderSynth = window.speechSynthesis;
+        let lastSpokenUtterance = null;
+
+        // Mise en place de l'heure et date actuelles (Dynamique comme sur la maquette d'Onboarding)
+        function initLockScreenClock() {
+            function updateClock() {
+                const now = new Date();
+                const hrs = String(now.getHours()).padStart(2, '0');
+                const mins = String(now.getMinutes()).padStart(2, '0');
+                
+                const clockEl = document.getElementById("live-clock");
+                if (clockEl) clockEl.innerText = `${hrs}:${mins}`;
+                
+                // Formater la date en français
+                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                const dateString = now.toLocaleDateString('fr-FR', options);
+                const dateEl = document.getElementById("live-date");
+                if (dateEl) dateEl.innerText = dateString;
+            }
+            updateClock();
+            setInterval(updateClock, 10000); // Mise à jour toutes les 10 secondes
+        }
+
+        // Changement d'écran actif dans notre structure d'application Vanilla
+        function showScreen(screenId) {
+            // Cacher tous les écrans
+            document.getElementById("screen-lock").classList.add("hidden");
+            document.getElementById("screen-companion").classList.add("hidden");
+            document.getElementById("screen-family").classList.add("hidden");
+            document.getElementById("screen-events").classList.add("hidden");
+            document.getElementById("screen-settings").classList.add("hidden");
+            
+            // Afficher l'écran demandé
+            document.getElementById(screenId).classList.remove("hidden");
+
+            // Masquer / Afficher le microphone géant terracotta selon l'écran pour rester centré sur la tâche
+            const micContainer = document.getElementById("mic-container");
+            if (screenId === "screen-companion") {
+                micContainer.classList.remove("hidden");
+            } else {
+                micContainer.classList.add("hidden");
+                // Arrêter la reconnaissance vocale si on quitte l'écran
+                if (isMicrophoneListening) {
+                    stopSpeechRecognition();
+                }
+            }
+
+            // Mettre à jour l'état visuel actif dans la barre de navigation
+            const navIds = ["nav-lock", "nav-companion", "nav-family", "nav-events", "nav-settings"];
+            navIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (id === "nav-" + screenId.replace("screen-", "")) {
+                    el.classList.add("text-primary");
+                    el.classList.remove("text-secondary");
+                } else {
+                    el.classList.add("text-secondary");
+                    el.classList.remove("text-primary");
+                }
+            });
+
+            // Recharger les données correspondantes aux pages interactives
+            if (screenId === "screen-events") {
+                fetchEvents();
+                fetchParticipations();
+            }
+            if (screenId === "screen-settings") {
+                loadProfileFromBackend();
+            }
+        }
+
+        // Entrée dans l'application après clic de la notification de d'onboarding
+        function unlockAndGoToCompanion() {
+            showScreen("screen-companion");
+            // Souhaiter la bienvenue vocalement si Suzanne ouvre l'application
+            speakOutLoud("Bonjour " + activeProfile.prenom + ". Comment allez-vous aujourd'hui ? Qu'avez-vous pris au petit-déjeuner ce matin ? Prenez votre temps, je vous écoute.");
+        }
+
+        // Configuration pour basculer facilement de question pédagogique dans la démo
+        function loadQuestion(questionType) {
+            currentQuestionKey = questionType;
+            const companionQuestion = document.getElementById("companion-question");
+            const companionImg = document.getElementById("companion-img");
+            
+            if (questionType === "petit-dejeuner") {
+                companionQuestion.innerText = "Qu'avez-vous pris pour le petit-déjeuner ce matin ?";
+                companionImg.src = "https://lh3.googleusercontent.com/aida-public/AB6AXuDRw29_6QgyJ8GEsPiLKA19tMUlYRI7t2FcCkFsfnZqgUb0vX4wuUrfG5nq2KoxD7qronkTlOiSLFMK8LEdSwy6AyZz0-Mb-f5IMHpWayWoD79UGDSm_hkdljI842ykRz3ocDYnqojabRfookbgPA1Y2ZMQZjPNuXKi2zaRUMFlvm-OgNQbjJd5028Uzkx8TAu00Mkj9XXDxQEagr_nGK9sOdr19CvZ8RKMbDk901Rd2xsTcGGOh5MHqI1EOUeVAotUjVpvz69qooVD";
+                speakOutLoud("Qu'avez-vous pris pour le petit-déjeuner ce matin ? Prenez votre temps.");
+            } else if (questionType === "mari") {
+                companionQuestion.innerText = "Comment avez-vous connu votre mari, Suzanne ?";
+                companionImg.src = "https://lh3.googleusercontent.com/aida-public/AB6AXuAwQn2e7_FJCIJl3pmzW93692lzSYuBk-ik8K9xJwE-4HAcgyQ-fpHBnrkx_S3zGcuM5EMFMtyXsvl6Gpe8jVdQ75nWYuQqkpTL0wN0W9D_AvmaqInUpklmxV-LBfPBUBrE6glSH_ADuovooNfmh4NPdmJqwHfqRNeUcCw9034u9vequc-jAuVLyMkJct1KdSVztFETxFy0P4icVPq5UezULbNKiEx-DIWi83HTIQ8ZbRSB4lIKCwLCG9n5wZ-xuprQ_8LBpO9h_Pxp";
+                speakOutLoud("Comment avez-vous connu votre mari, Suzanne ? Prenez tout votre temps, je vous écoute.");
+            }
+            
+            // Réinitialiser les transcriptions et les conteneurs existants
+            document.getElementById("mic-transcript-container").classList.add("hidden");
+            document.getElementById("ai-response-container").classList.add("hidden");
+        }
+
+        // ==============================================================
+        // MOTEUR AUDIO : RECONNAISSANCE VOCALE (Web Speech API)
+        // ==============================================================
+        function initSpeechRecognition() {
+            if (!SpeechRecognition) {
+                console.warn("Reconnaissance vocale non prise en charge dans ce navigateur.");
+                return;
+            }
+
+            speechRecognizer = new SpeechRecognition();
+            speechRecognizer.continuous = false;
+            speechRecognizer.lang = 'fr-FR'; // Langue d'écoute : Français
+            speechRecognizer.interimResults = false;
+
+            speechRecognizer.onstart = () => {
+                isMicrophoneListening = true;
+                updateMicrophoneUI();
+            };
+
+            speechRecognizer.onresult = (event) => {
+                const vocalResultTranscript = event.results[0][0].transcript;
+                console.log("Transcription reçue : ", vocalResultTranscript);
+                
+                // Afficher le texte entendu à Suzanne de manière très lisible
+                const transcriptContainer = document.getElementById("mic-transcript-container");
+                const transcriptText = document.getElementById("mic-transcript-text");
+                transcriptContainer.classList.remove("hidden");
+                transcriptText.innerText = `« ${vocalResultTranscript} »`;
+
+                // Transmettre la transcription au backend
+                sendTranscriptToAIBackend(vocalResultTranscript);
+            };
+
+            speechRecognizer.onerror = (event) => {
+                console.error("Erreur d'écoute de la voix : ", event.error);
+                stopSpeechRecognition();
+                
+                // Si la reconnaissance vocale est bloquée (par exemple, permissions iframe),
+                // nous fournissons une solution de simulation intelligente pour la démo.
+                if (event.error === "not-allowed") {
+                    simulateVocalResponsePrompt();
+                } else {
+                    alert("Erreur de microphone: " + event.error);
+                }
+            };
+
+            speechRecognizer.onend = () => {
+                isMicrophoneListening = false;
+                updateMicrophoneUI();
+            };
+        }
+
+        // Activer / Désactiver la prise du microphone au toucher du gros bouton brique
+        function toggleMicrophone() {
+            // Arrêter la lecture à voix haute en cours si Suzanne commence à parler
+            if (textReaderSynth.speaking) {
+                textReaderSynth.cancel();
+            }
+
+            if (!SpeechRecognition) {
+                // Pas de micro supporté : simulation immédiate
+                simulateVocalResponsePrompt();
+                return;
+            }
+
+            if (isMicrophoneListening) {
+                stopSpeechRecognition();
+            } else {
+                startSpeechRecognition();
+            }
+        }
+
+        function startSpeechRecognition() {
+            if (!speechRecognizer) {
+                initSpeechRecognition();
+            }
+            try {
+                speechRecognizer.start();
+            } catch (err) {
+                console.warn("L'écoute n'a pas pu démarrer directement :", err);
+                // Simulation en cas de blocage d'iframe sécurisé
+                simulateVocalResponsePrompt();
+            }
+        }
+
+        function stopSpeechRecognition() {
+            if (speechRecognizer) {
+                speechRecognizer.stop();
+            }
+            isMicrophoneListening = false;
+            updateMicrophoneUI();
+        }
+
+        // Animation et affichage d'état du bouton microphone terracotta
+        function updateMicrophoneUI() {
+            const btn = document.getElementById("btn-mic");
+            const icon = document.getElementById("mic-icon");
+            const label = document.getElementById("mic-status-label");
+            const halo = document.getElementById("mic-halo");
+            const soundwave = document.getElementById("listening-wave");
+
+            if (isMicrophoneListening) {
+                btn.style.backgroundColor = "#546049"; // Passer de Terracotta à Vert Sauge chaleureux
+                icon.innerText = "graphic_eq";
+                label.innerText = "Je vous écoute...";
+                halo.classList.remove("hidden");
+                soundwave.classList.add("wave-active");
+            } else {
+                btn.style.backgroundColor = "#c0563f"; // Revenir à Terracotta
+                icon.innerText = "mic";
+                label.innerText = "Parler";
+                halo.classList.add("hidden");
+                soundwave.classList.remove("wave-active");
+            }
+        }
+
+        // Simulation tactile intelligente de rechange au cas où le microphone serait interdit par les permissions du navigateur/iframe
+        function simulateVocalResponsePrompt() {
+            const simulatedText = prompt(
+                "Le microphone est indisponible (ceci se produit parfois dans les fenêtres d'aperçu d'iFrame).\n\nSaisissez manuellement la phrase que dirait Suzanne pour tester l'assistant vocal :",
+                currentQuestionKey === "petit-dejeuner" ? "J'ai pris du pain grillé avec du beurre de Limoges et un thé bien chaud." : "On s'est rencontrés à la fête des fleurs en 1963, il m'a offert une rose."
+            );
+            
+            if (simulatedText && simulatedText.trim() !== "") {
+                const transcriptContainer = document.getElementById("mic-transcript-container");
+                const transcriptText = document.getElementById("mic-transcript-text");
+                transcriptContainer.classList.remove("hidden");
+                transcriptText.innerText = `« ${simulatedText} »`;
+
+                sendTranscriptToAIBackend(simulatedText);
+            }
+        }
+
+        // ==============================================================
+        // MOTEUR AUDIO : DICTÉE VOCALE (SpeechSynthesis)
+        // ==============================================================
+        function populateVoiceList() {
+            if (typeof speechSynthesis === "undefined") return;
+            const voices = speechSynthesis.getVoices();
+            const assistantSelect = document.getElementById("voice-assistant-select");
+            const lucasSelect = document.getElementById("voice-lucas-select");
+            
+            if (!assistantSelect || !lucasSelect) return;
+            
+            // On conserve les sélections courantes
+            const selectedAssistant = assistantSelect.value || localStorage.getItem("voice_assistant_name") || "";
+            const selectedLucas = lucasSelect.value || localStorage.getItem("voice_lucas_name") || "";
+            
+            assistantSelect.innerHTML = "";
+            lucasSelect.innerHTML = "";
+            
+            // Filtrer les voix en français si possible
+            let frenchVoices = voices.filter(v => v.lang.startsWith("fr-FR") || v.lang.includes("fr") || v.lang.startsWith("fr-"));
+            
+            // Si aucune voix de langue française n'est installée, on propose toutes les voix
+            const listToUse = frenchVoices.length > 0 ? frenchVoices : voices;
+            
+            listToUse.forEach(voice => {
+                const optionNodeAssis = document.createElement("option");
+                optionNodeAssis.value = voice.name;
+                optionNodeAssis.textContent = `${voice.name} (${voice.lang})${voice.default ? ' [Défaut]' : ''}`;
+                assistantSelect.appendChild(optionNodeAssis);
+                
+                const optionNodeLucas = document.createElement("option");
+                optionNodeLucas.value = voice.name;
+                optionNodeLucas.textContent = `${voice.name} (${voice.lang})${voice.default ? ' [Défaut]' : ''}`;
+                lucasSelect.appendChild(optionNodeLucas);
+            });
+            
+            // Restaurer les valeurs ou définir des voix douces par défaut
+            if (selectedAssistant && Array.from(assistantSelect.options).some(o => o.value === selectedAssistant)) {
+                assistantSelect.value = selectedAssistant;
+            } else {
+                // Trouver une voix de femme douce d'abord (Hortense, Julie, Google, Aurelie, Thomas, Premium, Natural)
+                const defaultAssis = frenchVoices.find(v => v.name.toLowerCase().includes("hortense") || v.name.toLowerCase().includes("julie") || v.name.toLowerCase().includes("google") || v.name.toLowerCase().includes("aurelie") || v.name.toLowerCase().includes("thomas") || v.name.toLowerCase().includes("premium") || v.name.toLowerCase().includes("natural"));
+                if (defaultAssis) {
+                    assistantSelect.value = defaultAssis.name;
+                }
+            }
+            
+            if (selectedLucas && Array.from(lucasSelect.options).some(o => o.value === selectedLucas)) {
+                lucasSelect.value = selectedLucas;
+            } else {
+                // Trouver une voix masculine/jeune poétique (Thomas, Sébastien, Google, natural)
+                const defaultLuc = frenchVoices.find(v => v.name.toLowerCase().includes("thomas") || v.name.toLowerCase().includes("sébastien") || v.name.toLowerCase().includes("paul") || v.name.toLowerCase().includes("google") || v.name.toLowerCase().includes("natural") || v.name.toLowerCase().includes("micro"));
+                if (defaultLuc) {
+                    lucasSelect.value = defaultLuc.name;
+                }
+            }
+
+            // Sync slide controls with localStorage
+            document.getElementById("voice-assistant-pitch").value = localStorage.getItem("voice_assistant_pitch") || "1.1";
+            document.getElementById("voice-assistant-rate").value = localStorage.getItem("voice_assistant_rate") || "0.8";
+            document.getElementById("voice-lucas-pitch").value = localStorage.getItem("voice_lucas_pitch") || "1.15";
+            document.getElementById("voice-lucas-rate").value = localStorage.getItem("voice_lucas_rate") || "0.85";
+        }
+
+        function saveVoiceConfig() {
+            const assistantSelect = document.getElementById("voice-assistant-select");
+            const lucasSelect = document.getElementById("voice-lucas-select");
+            if (!assistantSelect || !lucasSelect) return;
+
+            localStorage.setItem("voice_assistant_name", assistantSelect.value);
+            localStorage.setItem("voice_lucas_name", lucasSelect.value);
+            localStorage.setItem("voice_assistant_pitch", document.getElementById("voice-assistant-pitch").value);
+            localStorage.setItem("voice_assistant_rate", document.getElementById("voice-assistant-rate").value);
+            localStorage.setItem("voice_lucas_pitch", document.getElementById("voice-lucas-pitch").value);
+            localStorage.setItem("voice_lucas_rate", document.getElementById("voice-lucas-rate").value);
+        }
+
+        function testVoice(voiceType) {
+            saveVoiceConfig();
+            if (voiceType === 'assistant') {
+                speakOutLoud("Bonjour, je suis votre assistant vocal Memoria. Ma voix vous semble-t-elle douce et agréable ?", 'assistant');
+            } else {
+                speakOutLoud("Coucou Mamie, c'est Lucas ! Est-ce que tu m'entends bien ?", 'lucas');
+            }
+        }
+
+        async function speakOutLoud(text, voiceType = 'assistant') {
+            if (window.currentAudio) {
+                window.currentAudio.pause();
+                window.currentAudio = null;
+            }
+            const voice = voiceType === 'lucas' ? 'fr_pierre_happy' : 'fr_marie_happy';
+            try {
+                const response = await fetch(`${API_BASE}/speak`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getSelectedTokenHeader()
+                    },
+                    body: JSON.stringify({ text, voice })
+                });
+                if (!response.ok) throw new Error("TTS error");
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                window.currentAudio = audio;
+                audio.onplay = () => document.getElementById("listening-wave")?.classList.add("wave-active");
+                audio.onended = () => {
+                    document.getElementById("listening-wave")?.classList.remove("wave-active");
+                    URL.revokeObjectURL(audioUrl);
+                };
+                await audio.play();
+            } catch (err) {
+                console.error("Voxtral indisponible, fallback:", err);
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = "fr-FR";
+                utterance.rate = 0.85;
+                utterance.pitch = 1.1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        function readLastAIResponse() {
+            if (lastAIResponseTextStr) {
+                speakOutLoud(lastAIResponseTextStr, 'assistant');
+            }
+        }
+
+        function playLucasVoice() {
+            const speakerIcon = document.getElementById("lucas-speaker-icon");
+            
+            if (window.lucasAudio && !window.lucasAudio.paused) {
+                window.lucasAudio.pause();
+                window.lucasAudio.currentTime = 0;
+                speakerIcon.innerText = "volume_up";
+                document.getElementById("listening-wave")?.classList.remove("wave-active");
+                return;
+            }
+
+            window.lucasAudio = new Audio('/lucas.mp3');
+            speakerIcon.innerText = "pause";
+            document.getElementById("listening-wave")?.classList.add("wave-active");
+            
+            window.lucasAudio.onended = () => {
+                speakerIcon.innerText = "volume_up";
+                document.getElementById("listening-wave")?.classList.remove("wave-active");
+            };
+            
+            window.lucasAudio.play();
+        }
+
+        // ==============================================================
+        // ENVOI AU BACKEND ET GESTION DES APPELS / SUGGEST / PARTICIPATE
+        // ==============================================================
+        async function sendTranscriptToAIBackend(transcriptText) {
+            const appUiLoader = document.getElementById("ai-response-container");
+            appUiLoader.classList.remove("hidden");
+            
+            const textResponseEl = document.getElementById("ai-response-text");
+            textResponseEl.innerHTML = `
+                <div class="flex items-center gap-3 text-secondary animate-pulse">
+                    <span class="material-symbols-outlined animate-spin">progress_activity</span>
+                    <span>Memoria réfléchit doucement...</span>
+                </div>`;
+            
+            try {
+                // Appel POST au backend à l'aide des règles de sécurité (Authorization)
+                const fetchResponse = await fetch(`${API_BASE}/suggest`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getSelectedTokenHeader() // Devra envoyer user123 ou admin456
+                    },
+                    body: JSON.stringify({
+                        transcript: transcriptText,
+                        userId: activeUserId
+                    })
+                });
+
+                if (!fetchResponse.ok) {
+                    throw new Error("Erreur de communication : " + fetchResponse.statusText);
+                }
+
+                const responseData = await fetchResponse.json();
+                console.log("Suggestions d'activités reçues : ", responseData);
+
+                // Mettre à jour l'affichage de notre assistant à voix haute
+                lastAIResponseTextStr = responseData.assistantMessage;
+                textResponseEl.innerText = responseData.assistantMessage;
+                
+                // Dictée chaleureuse
+                speakOutLoud(responseData.assistantMessage, 'assistant');
+
+                // Génération des cartes de suggestions au bas de la page
+                renderSuggestionsHtml(responseData.suggestions);
+
+            } catch (err) {
+                console.error("Échec de suggest backend : ", err);
+                
+                // Gestion ergonomique des erreurs : Fallback chaleureux autonome local
+                const fallbackReply = "Merci pour ce partage Suzanne. Je ne parviens pas à joindre mon service de suggestion actuellement pour enregistrer votre réponse, mais vos activités de l'après-midi comme l'aquarelle vous attendent.";
+                lastAIResponseTextStr = fallbackReply;
+                textResponseEl.innerText = fallbackReply;
+                speakOutLoud(fallbackReply, 'assistant');
+
+                // Suggérer des activités statiques sécuritaires
+                renderSuggestionsHtml([
+                    {
+                        eventId: "e1",
+                        titre: "Atelier Aquarelle & Nature",
+                        description: "Dessinez ensemble les fleurs de saison dans une ambiance calme et chaleureuse.",
+                        lieu: "Salon d'Art",
+                        heure: "14:30",
+                        emoji: "🎨",
+                        raison: "L'aquarelle convient à votre niveau de mobilité modérée et stimule vos intérêts."
+                    }
+                ]);
+            }
+        }
+
+        // Création dynamique des propositions d'activités à une ou deux colonnes
+        function renderSuggestionsHtml(suggestionsArr) {
+            const parentContainer = document.getElementById("ai-suggestions-list");
+            parentContainer.innerHTML = `
+                <h4 class="font-headline text-primary text-md font-bold mt-4 mb-2">Activités sélectionnées pour vous :</h4>
+            `;
+
+            if (!suggestionsArr || suggestionsArr.length === 0) {
+                parentContainer.innerHTML += `<p class="font-body text-secondary">Aucune activité n'a pu être générée spécifiquement pour l'instant.</p>`;
+                return;
+            }
+
+            suggestionsArr.forEach(item => {
+                const itemCardHtml = `
+                    <div id="suggestion-card-${item.eventId}" class="bg-surface-container-low border border-secondary/10 p-5 rounded-lg text-left space-y-3 vintage-shadow transition-all duration-300">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">${item.emoji || '👥'}</span>
+                            <div>
+                                <h5 class="font-headline text-lg font-bold text-on-surface leading-tight">${item.titre}</h5>
+                                <p class="text-sm text-secondary font-bold font-headline">${item.heure} • ${item.lieu}</p>
+                            </div>
+                        </div>
+                        <p class="font-body text-base text-on-surface-variant leading-relaxed">
+                            ${item.description}
+                        </p>
+                        <div class="bg-primary/5 p-3 rounded text-sm text-primary font-body border border-primary/5 flex items-start gap-2">
+                            <span class="material-symbols-outlined text-lg leading-none mt-0.5">info</span>
+                            <span><strong>Pourquoi j'aime :</strong> ${item.raison}</span>
+                        </div>
+                        <button onclick="registerAsParticipant('${item.eventId}')" class="w-full text-center py-3 bg-primary text-white font-headline text-base rounded px-4 hover:scale-105 active:scale-95 transition-transform tracking-wider cursor-pointer tactile-btn">
+                            Rejoindre cette activité
+                        </button>
+                    </div>`;
+                parentContainer.innerHTML += itemCardHtml;
+            });
+        }
+
+        // Rejoindre un événement (POST /participate)
+        async function registerAsParticipant(eventId) {
+            try {
+                const payloadResponse = await fetch(`${API_BASE}/participate`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getSelectedTokenHeader()
+                    },
+                    body: JSON.stringify({
+                        userId: activeUserId,
+                        eventId: eventId
+                    })
+                });
+
+                if (!payloadResponse.ok) {
+                    throw new Error("Erreur de participation.");
+                }
+
+                const result = await payloadResponse.json();
+                if (result.ok) {
+                    speakOutLoud("Merveilleux ! Vous êtes inscrite à cette activité. Je l'ajoute à vos moments mémorables.", 'assistant');
+                    
+                    // Retour retour visuel immédiat pour le confort senior
+                    const targetCard = document.getElementById("suggestion-card-" + eventId);
+                    if (targetCard) {
+                        targetCard.classList.remove("bg-surface-container-low");
+                        targetCard.classList.add("bg-tertiary/10", "border-tertiary/20");
+                        targetCard.innerHTML = `
+                            <div class="text-center py-6 space-y-2">
+                                <span class="text-4xl text-tertiary">✅</span>
+                                <h5 class="font-headline text-xl font-bold text-tertiary">Inscription Confirmée !</h5>
+                                <p class="font-body text-on-surface-variant">L'activité a bien été ajoutée à votre agenda aujourd'hui.</p>
+                            </div>`;
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur participant :", err);
+                alert("Impossible d'enregistrer l'inscription. Vérifiez votre connectivité backend.");
+            }
+        }
+
+        // Extraction de la liste complète des activités globales (GET /events)
+        async function fetchEvents() {
+            const listContainer = document.getElementById("events-list-container");
+            listContainer.innerHTML = `
+                <div class="text-center py-8 text-secondary">
+                    <span class="material-symbols-outlined animate-spin text-3xl">progress_activity</span>
+                    <p class="font-headline text-md mt-2">Chargement des rencontres adaptées...</p>
+                </div>`;
+
+            try {
+                const response = await fetch(`${API_BASE}/events`, {
+                    headers: { "Authorization": getSelectedTokenHeader() }
+                });
+                
+                if (!response.ok) {
+                    throw new Error("HTTP Status : " + response.status);
+                }
+
+                const events = await response.json();
+                listContainer.innerHTML = "";
+
+                if (events.length === 0) {
+                    listContainer.innerHTML = `<p class="font-body text-center text-secondary py-4">Pas d'activités programmées à Limoges ce jour.</p>`;
+                    return;
+                }
+
+                events.forEach(item => {
+                    const viewCard = `
+                        <div class="bg-surface-container-lowest border border-secondary/10 p-5 rounded-lg text-left vintage-shadow space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">${item.emoji || '👥'}</span>
+                                <div>
+                                    <h4 class="font-headline text-lg font-bold text-primary leading-tight">${item.titre}</h4>
+                                    <p class="text-xs text-secondary font-bold font-headline">${item.heure} • ${item.lieu}</p>
+                                </div>
+                            </div>
+                            <p class="font-body text-base text-on-surface-variant leading-relaxed">
+                                ${item.description}
+                            </p>
+                            <button onclick="registerAsParticipant('${item.eventId}')" class="w-full text-center py-2.5 bg-secondary text-white font-headline text-sm rounded hover:scale-105 active:scale-95 cursor-pointer tactile-btn">
+                                S'inscrire d'un simple toucher
+                            </button>
+                        </div>`;
+                    listContainer.innerHTML += viewCard;
+                });
+
+            } catch (err) {
+                console.error("Échec du chargement events : ", err);
+                listContainer.innerHTML = `
+                    <div class="bg-red-50 p-4 rounded text-red-700 text-sm font-body border border-red-200">
+                        Impossible de se connecter au serveur backend. Veuillez lancer le serveur Express.
+                    </div>`;
+            }
+        }
+
+        // Historique des participations (GET /participations/:userId)
+        async function fetchParticipations() {
+            const participContainer = document.getElementById("participations-list-container");
+            participContainer.innerHTML = `<p class="font-body text-sm text-secondary animate-pulse">Recherche de vos souvenirs d'activités...</p>`;
+
+            try {
+                const response = await fetch(`${API_BASE}/participations/${activeUserId}`, {
+                    headers: { "Authorization": getSelectedTokenHeader() }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Erreur participations list.");
+                }
+
+                const participations = await response.json();
+                participContainer.innerHTML = "";
+
+                if (participations.length === 0) {
+                    participContainer.innerHTML = `<p class="font-body text-md text-secondary py-2 italic text-left">Vous n'avez pas rejoint d'activités pour le moment.</p>`;
+                    return;
+                }
+
+                participations.forEach(item => {
+                    const row = `
+                        <div class="bg-surface-container border-l-4 border-tertiary px-4 py-3 rounded text-left flex items-center justify-between">
+                            <div>
+                                <h5 class="font-headline text-[17px] font-bold text-on-surface leading-snug">${item.emoji || '👥'} ${item.titre}</h5>
+                                <p class="text-xs text-secondary font-headline">Heure : ${item.heure} — Lieu : ${item.lieu}</p>
+                            </div>
+                            <span class="text-sm font-headline bg-tertiary text-white font-bold px-3 py-1 rounded-full">Inscrit</span>
+                        </div>`;
+                    participContainer.innerHTML += row;
+                });
+
+            } catch (err) {
+                console.error("Erreur historique :", err);
+                participContainer.innerHTML = `<p class="font-body text-sm text-red-600">Erreur historique participations.</p>`;
+            }
+        }
+
+        // ==============================================================
+        // PARAMÈTRES & PROFIL SÉNIOR (GET/POST /profile/:userId)
+        // ==============================================================
+        async function loadProfileFromBackend() {
+            try {
+                const response = await fetch(`${API_BASE}/profile/${activeUserId}`, {
+                    headers: { "Authorization": getSelectedTokenHeader() }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Impossible de joindre le profil.");
+                }
+
+                const profile = await response.json();
+                activeProfile = profile;
+
+                // Mettre à jour les inputs du formulaire
+                document.getElementById("profile-name").value = profile.prenom;
+                document.getElementById("profile-age").value = profile.age;
+                document.getElementById("profile-mobility").value = profile.mobilite;
+                document.getElementById("profile-interests").value = profile.interets;
+                document.getElementById("profile-avoid").value = profile.sujets_eviter;
+
+            } catch (err) {
+                console.error("Erreur chargement profil backend :", err);
+            }
+        }
+
+        async function saveProfile(event) {
+            event.preventDefault();
+            
+            const pName = document.getElementById("profile-name").value;
+            const pAge = parseInt(document.getElementById("profile-age").value);
+            const pMobility = document.getElementById("profile-mobility").value;
+            const pInterests = document.getElementById("profile-interests").value;
+            const pAvoid = document.getElementById("profile-avoid").value;
+
+            try {
+                const response = await fetch(`${API_BASE}/profile/${activeUserId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": getSelectedTokenHeader()
+                    },
+                    body: JSON.stringify({
+                        prenom: pName,
+                        age: pAge,
+                        mobilite: pMobility,
+                        interets: pInterests,
+                        sujets_eviter: pAvoid
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Échec d'enregistrement du profil.");
+                }
+
+                const savedProfile = await response.json();
+                activeProfile = savedProfile;
+
+                speakOutLoud("Votre profil d'accompagnement cognitif a bien été mis à jour dans ma mémoire, " + activeProfile.prenom + ".", 'assistant');
+                alert("Modifications enregistrées sur le profil " + activeUserId + " ! Elément mémorisé en base.");
+
+            } catch (err) {
+                console.error("Erreur lors de la sauvegarde :", err);
+                alert("Erreur de connexion au serveur backend.");
+            }
+        }
+
+        // ==============================================================
+        // COMPOSANTS ERGONOMIQUES REPARTIS ET SOS
+        // ==============================================================
+        function triggerSOS() {
+            // Un bouton d'appel d'urgence réconfortant à appuis direct
+            speakOutLoud("Alerte d'urgence activée. Je préviens immédiatement vos proches et le service d'aide de Limoges. Restez calme, je suis avec vous.", 'assistant');
+            
+            // Notification immédiate pour le testeur
+            alert("🚨 APPEL SOS MEMORIA 🚨\n\nNotification d'urgence simulée pour Suzanne vers ses aidants et le centre de soutien !");
+        }
+
+        function saveSouvenir() {
+            // Effet graphique tactile de sauvegarde de souvenirs
+            const heart = document.getElementById("souvenir-heart-icon");
+            const btnText = document.getElementById("souvenir-text");
+            const btn = document.getElementById("btn-save- souvenir");
+
+            heart.textContent = "💖";
+            btnText.textContent = "Mot de Lucas enregistré dans vos souvenirs !";
+            btn.classList.add("text-primary", "border-primary/40", "bg-primary/5");
+            
+            speakOutLoud("Ce doux mot de Lucas a été enregistré de façon permanente dans votre album des souvenirs.", 'assistant');
+
+            setTimeout(() => {
+                heart.textContent = "💛";
+                btnText.textContent = "Garder ce message précieux";
+                btn.classList.remove("text-primary", "border-primary/40", "bg-primary/5");
+            }, 5000);
+        }
+
+        // Récupérer le token de session paramétré par l'entête
+        function getSelectedTokenHeader() {
+            const selectEl = document.getElementById("auth-select");
+            return selectEl ? selectEl.value : activeUserId;
+        }
+
+        function updateAuthHeader() {
+            const selectEl = document.getElementById("auth-select");
+            activeUserId = selectEl.value; // Suzanne est user123, l'admin est admin456
+            console.log("UserID basculé sur : " + activeUserId);
+            
+            // Recharger les données correspondantes
+            loadProfileFromBackend();
+        }
+
+        // Lancement au chargement du DOM
+        document.addEventListener("DOMContentLoaded", () => {
+            initLockScreenClock();
+            initSpeechRecognition();
+            
+            // Commencer à l'écran de verrouillage
+            showScreen("screen-lock");
+            
+            // Ajuster les permissions audio et chargement des voix de synthèse
+            if (typeof speechSynthesis !== "undefined") {
+                populateVoiceList();
+                speechSynthesis.onvoiceschanged = () => {
+                    console.log("Liste des voix synthétiques actualisées.");
+                    populateVoiceList();
+                };
+            }
+        });
+    </script>
+</body>
+</html>
