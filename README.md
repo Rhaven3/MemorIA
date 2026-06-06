@@ -149,7 +149,6 @@ memoria/
 ## Notes
 
 - The `.env` file is excluded from version control. Never commit API keys.
-- The `lucas.mp3` audio file is excluded from version control.
 - For production deployment, the application can be hosted on Railway or Render using the `npm run build && npm start` commands.
 
 ## License
